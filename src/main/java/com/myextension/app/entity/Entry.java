@@ -6,6 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +38,7 @@ public class Entry {
 
     private String content;
 
+    @JsonBackReference("pillar-entries")
     @ManyToOne
     @JoinColumn(name = "pillar_id", nullable = false)
     private Pillar pillar;

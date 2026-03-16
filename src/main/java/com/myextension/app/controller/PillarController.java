@@ -29,7 +29,7 @@ public class PillarController {
         return pillarService.createPillar(pillar);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public Pillar updatePillar(@PathVariable Long id, @RequestBody Pillar pillar) {
         Pillar existingPillar = pillarService.updatePillar(id, pillar);
         if (existingPillar == null) {

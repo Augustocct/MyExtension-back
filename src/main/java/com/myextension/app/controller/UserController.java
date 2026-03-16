@@ -2,6 +2,7 @@ package com.myextension.app.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,12 +25,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         User existingUser = userService.updateUser(id, user);
         if (existingUser == null) {
@@ -38,7 +39,7 @@ public class UserController {
         return existingUser;
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public List<User> getUsers() {
         return userService.listUsers();
     }

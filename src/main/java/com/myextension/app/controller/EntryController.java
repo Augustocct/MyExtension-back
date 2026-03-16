@@ -28,7 +28,7 @@ public class EntryController {
         return entryService.createEntry(entry);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public Entry updateEntry(@PathVariable Long id, @RequestBody Entry entry) {
         Entry existingEntry = entryService.updateEntry(id, entry);
         if (existingEntry == null) {
