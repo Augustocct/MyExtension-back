@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
-        User existingUser = findUserEntity(id);
+        User existingUser = findUserById(id);
         existingUser.setName(userRequestDTO.name());
         existingUser.setPassword(userRequestDTO.password());
         User updatedUser = userRepository.save(existingUser);
@@ -33,7 +33,7 @@ public class UserService {
     }
 
     public UserResponseDTO getUser(Long id) {
-        User user = findUserEntity(id);
+        User user = findUserById(id);
         return UserMapper.toDTO(user);
     }
 
@@ -43,7 +43,7 @@ public class UserService {
                 .toList();
     }
 
-    public User findUserEntity(Long id) {
+    public User findUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }

@@ -16,8 +16,10 @@ import com.myextension.app.dto.request.EntryRequestDTO;
 import com.myextension.app.dto.response.EntryResponseDTO;
 import com.myextension.app.service.EntryService;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("entrys")
+@RequestMapping("/entrys")
 public class EntryController {
     private final EntryService entryService;
 
@@ -26,13 +28,14 @@ public class EntryController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<EntryResponseDTO> createEntry(@RequestBody EntryRequestDTO entryRequestDTO) {
+    public ResponseEntity<EntryResponseDTO> createEntry(@RequestBody @Valid EntryRequestDTO entryRequestDTO) {
         EntryResponseDTO createdEntry = entryService.createEntry(entryRequestDTO);
         return ResponseEntity.ok(createdEntry);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<EntryResponseDTO> updateEntry(@PathVariable Long id, @RequestBody EntryRequestDTO entry) {
+    public ResponseEntity<EntryResponseDTO> updateEntry(@PathVariable Long id,
+            @RequestBody @Valid EntryRequestDTO entry) {
         EntryResponseDTO updatedEntry = entryService.updateEntry(id, entry);
         return ResponseEntity.ok(updatedEntry);
     }

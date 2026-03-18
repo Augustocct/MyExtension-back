@@ -35,8 +35,6 @@ public class EntryService {
         Pillar pillar = pillarRepository.findById(entryRequestDTO.pillarId())
                 .orElseThrow(() -> new RuntimeException("Pillar not found"));
         Entry entry = EntryMapper.toEntity(entryRequestDTO);
-        entry.setTitle(entryRequestDTO.title());
-        entry.setContent(entryRequestDTO.content());
         entry.setAuthor(author);
         entry.setPillar(pillar);
         Entry savedEntry = entryRepository.save(entry);

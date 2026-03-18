@@ -33,18 +33,18 @@ public class PillarService {
     }
 
     public PillarResponseDTO updatePillar(Long id, PillarRequestDTO pillarRequestDTO) {
-        Pillar existingPillar = findPillarByEntity(id);
+        Pillar existingPillar = findPillarById(id);
         existingPillar.setName(pillarRequestDTO.name());
         Pillar updatedPillar = pillarRepository.save(existingPillar);
         return PillarMapper.toDTO(updatedPillar);
     }
 
     public PillarResponseDTO getPillar(Long id) {
-        Pillar pillar = findPillarByEntity(id);
+        Pillar pillar = findPillarById(id);
         return PillarMapper.toDTO(pillar);
     }
 
-    public Pillar findPillarByEntity(Long id) {
+    public Pillar findPillarById(Long id) {
         return pillarRepository.findById(id).orElseThrow(() -> new RuntimeException("Pillar not found"));
     }
 
