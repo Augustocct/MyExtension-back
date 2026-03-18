@@ -4,34 +4,64 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.myextension.app.dto.request.EntryRequestDTO;
+import com.myextension.app.dto.response.EntryResponseDTO;
 import com.myextension.app.entity.Entry;
+import com.myextension.app.entity.Pillar;
+import com.myextension.app.entity.User;
+import com.myextension.app.mapper.EntryMapper;
 import com.myextension.app.repository.EntryRepository;
+import com.myextension.app.repository.PillarRepository;
+import com.myextension.app.repository.UserRepository;
 
 @Service
 public class EntryService {
     private final EntryRepository entryRepository;
 
-    public EntryService(EntryRepository entryRepository) {
+    private final UserRepository userRepository;
+
+    private final PillarRepository pillarRepository;
+
+    public EntryService(EntryRepository entryRepository, UserRepository userRepository,
+            PillarRepository pillarRepository) {
         this.entryRepository = entryRepository;
+        this.userRepository = userRepository;
+        this.pillarRepository = pillarRepository;
     }
 
-    public Entry createEntry(Entry entry) {
-        return entryRepository.save(entry);
+    public EntryResponseDTO createEntry(EntryRequestDTO entryRequestDTO) {
+        User author = userRepository.findById(entryRequestDTO.authorId())
+                .orElseThrow(() -> new RuntimeException("Author not found"));
+        Pillar pillar = pillarRepository.findById(entryRequestDTO.pillarId())
+                .orElseThrow(() -> new RuntimeException("Pillar not found"));
+        Entry entry = EntryMapper.toEntity(entryRequestDTO);
+        entry.setTitle(entryRequestDTO.title());
+        entry.setContent(entryRequestDTO.content());
+        entry.setAuthor(author);
+        entry.setPillar(pillar);
+        Entry savedEntry = entryRepository.save(entry);
+        return EntryMapper.toDTO(savedEntry);
     }
 
-    public Entry updateEntry(Long id, Entry entry) {
-        Entry existingEntry = getEntry(id);
-        existingEntry.setTitle(entry.getTitle());
-        existingEntry.setContent(entry.getContent());
-        return entryRepository.save(existingEntry);
+    public EntryResponseDTO updateEntry(Long id, EntryRequestDTO entry) {
+        Entry existingEntry = findEntryById(id);
+        existingEntry.setTitle(entry.title());
+        existingEntry.setContent(entry.content());
+        Entry updatedEntry = entryRepository.save(existingEntry);
+        return EntryMapper.toDTO(updatedEntry);
     }
 
-    public Entry getEntry(Long id) {
+    public EntryResponseDTO getEntry(Long id) {
+        Entry entry = entryRepository.findById(id).orElseThrow(() -> new RuntimeException("Entry not found"));
+        return EntryMapper.toDTO(entry);
+    }
+
+    public Entry findEntryById(Long id) {
         return entryRepository.findById(id).orElseThrow(() -> new RuntimeException("Entry not found"));
     }
 
-    public List<Entry> listEntry() {
-        return entryRepository.findAll();
+    public List<EntryResponseDTO> listEntry() {
+        return entryRepository.findAll().stream().map(EntryMapper::toDTO).collect(java.util.stream.Collectors.toList());
     }
 
     public void deleteEntry(Long id) {

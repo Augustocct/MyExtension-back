@@ -2,6 +2,7 @@ package com.myextension.app.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myextension.app.entity.Entry;
+import com.myextension.app.dto.request.EntryRequestDTO;
+import com.myextension.app.dto.response.EntryResponseDTO;
 import com.myextension.app.service.EntryService;
 
 @RestController
@@ -24,31 +26,31 @@ public class EntryController {
     }
 
     @PostMapping("/create")
-    public Entry createEntry(@RequestBody Entry entry) {
-        return entryService.createEntry(entry);
+    public ResponseEntity<EntryResponseDTO> createEntry(@RequestBody EntryRequestDTO entryRequestDTO) {
+        EntryResponseDTO createdEntry = entryService.createEntry(entryRequestDTO);
+        return ResponseEntity.ok(createdEntry);
     }
 
     @PutMapping("/update/{id}")
-    public Entry updateEntry(@PathVariable Long id, @RequestBody Entry entry) {
-        Entry existingEntry = entryService.updateEntry(id, entry);
-        if (existingEntry == null) {
-            throw new RuntimeException("Entry not found");
-        }
-        return existingEntry;
+    public ResponseEntity<EntryResponseDTO> updateEntry(@PathVariable Long id, @RequestBody EntryRequestDTO entry) {
+        EntryResponseDTO updatedEntry = entryService.updateEntry(id, entry);
+        return ResponseEntity.ok(updatedEntry);
     }
 
     @GetMapping("/list")
-    public List<Entry> getEntry() {
-        return entryService.listEntry();
+    public ResponseEntity<List<EntryResponseDTO>> getEntry() {
+        return ResponseEntity.ok(entryService.listEntry());
     }
 
     @GetMapping("/{id}")
-    public Entry getEntryById(@PathVariable Long id) {
-        return entryService.getEntry(id);
+    public ResponseEntity<EntryResponseDTO> getEntryById(@PathVariable Long id) {
+        EntryResponseDTO entry = entryService.getEntry(id);
+        return ResponseEntity.ok(entry);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEntryById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEntryById(@PathVariable Long id) {
         entryService.deleteEntry(id);
+        return ResponseEntity.noContent().build();
     }
 }

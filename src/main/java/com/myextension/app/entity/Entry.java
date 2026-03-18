@@ -38,6 +38,10 @@ public class Entry {
 
     private String content;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
+
     @JsonBackReference("pillar-entries")
     @ManyToOne
     @JoinColumn(name = "pillar_id", nullable = false)
